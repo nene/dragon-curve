@@ -1,15 +1,35 @@
-const LENGTH = 3;
 const UP = 0;
 const RIGHT = 1;
 const DOWN = 2;
 const LEFT = 3;
 
 function onPageReady() {
+  let iterations = parseInt(document.getElementById('iterations').value, 10);
+  document.getElementById('minus').addEventListener('click', () => {
+    iterations--;
+    setInput(iterations);
+    drawGraph(iterations);
+  });
+  document.getElementById('plus').addEventListener('click', () => {
+    iterations++;
+    setInput(iterations);
+    drawGraph(iterations);
+  });
+  drawGraph(iterations);
+}
+
+function setInput(value) {
+  document.getElementById('iterations').value = value;
+}
+
+function drawGraph(iterations) {
   const c = document.getElementById('canvas');
   const ctx = c.getContext('2d');
-  const seq = sequence([LEFT], 12);
+  const seq = sequence([LEFT], iterations);
   const [len, startPos] = scale(size(seq), [1024, 1024]);
 
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(0, 0, 1024, 1024);
   strokeSequence(ctx, startPos, len, seq);
 }
 
