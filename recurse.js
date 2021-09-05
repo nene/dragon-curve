@@ -35,10 +35,6 @@ function rotate(dir) {
   return (dir + 1) % 4;
 }
 
-function rotateCCW(dir) {
-  return (dir + 3) % 4;
-}
-
 function pointPlusDir([x,y], dir) {
   if (dir === UP) {
     return [x,y-LENGTH];
