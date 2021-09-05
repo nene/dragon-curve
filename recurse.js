@@ -7,7 +7,10 @@ const LEFT = 3;
 function onPageReady() {
   const c = document.getElementById('canvas');
   const ctx = c.getContext('2d');
-  strokeSequence(ctx, [600, 200], sequence([LEFT], 15));
+  const seq = sequence([LEFT], 5);
+  const [len, startPos] = scale(size(seq), [1024, 1024]);
+
+  strokeSequence(ctx, startPos, len, seq);
 }
 
 function sequence(dirs, n) {
@@ -18,12 +21,46 @@ function sequence(dirs, n) {
   return sequence([...dirs, ...newItems], n-1);
 }
 
-function strokeSequence(ctx, p1, dirs) {
+function size(dirs) {
+  let p = [0,0];
+  let xMin = 0;
+  let xMax = 0;
+  let yMin = 0;
+  let yMax = 0;
+  for (const dir of dirs) {
+    p = pointPlusDir(p, dir, 1);
+    const [x, y] = p;
+    xMin = Math.min(xMin, x);
+    xMax = Math.max(xMax, x);
+    yMin = Math.min(yMin, y);
+    yMax = Math.max(yMax, y);
+  }
+  return [[xMin, yMin], [xMax, yMax]];
+}
+
+function scale([[xMin, yMin], [xMax, yMax]], [width, height]) {
+  const abs = Math.abs;
+  // Size of graph
+  const gWidth = abs(xMin) + abs(xMax);
+  const gHeight = abs(yMin) + abs(yMax);
+
+  // How much it should be scaled up or down
+  const scaleX = width / gWidth;
+  const scaleY = height / gHeight;
+  const minScale = scaleX < scaleY ? scaleX : scaleY;
+
+  // How its starting point should be positioned
+  const startPos = [abs(xMin)*minScale, abs(yMin)*minScale];
+
+  return [minScale, startPos];
+}
+
+function strokeSequence(ctx, p1, len, dirs) {
   ctx.beginPath();
   ctx.moveTo(p1[0], p1[1]);
 
   for (const dir of dirs) {
-    const p2 = pointPlusDir(p1, dir);
+    const p2 = pointPlusDir(p1, dir, len);
     ctx.lineTo(p2[0], p2[1]);
     p1 = p2;
   }
@@ -35,18 +72,18 @@ function rotate(dir) {
   return (dir + 1) % 4;
 }
 
-function pointPlusDir([x,y], dir) {
+function pointPlusDir([x,y], dir, len) {
   if (dir === UP) {
-    return [x,y-LENGTH];
+    return [x,y-len];
   }
   else if (dir === RIGHT) {
-    return [x+LENGTH,y];
+    return [x+len,y];
   }
   else if (dir === DOWN) {
-    return [x,y+LENGTH];
+    return [x,y+len];
   }
   else { // LEFT
-    return [x-LENGTH,y];
+    return [x-len,y];
   }
 }
 
