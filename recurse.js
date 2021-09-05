@@ -1,4 +1,4 @@
-const LENGTH = 1;
+const LENGTH = 3;
 const UP = 0;
 const RIGHT = 1;
 const DOWN = 2;
@@ -7,7 +7,7 @@ const LEFT = 3;
 function onPageReady() {
   const c = document.getElementById('canvas');
   const ctx = c.getContext('2d');
-  strokeSequence(ctx, [500, 200], sequence([RIGHT], 18));
+  strokeSequence(ctx, [600, 200], sequence([LEFT], 15));
 }
 
 function sequence(dirs, n) {
