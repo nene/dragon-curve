@@ -20,11 +20,16 @@ function sequence(dirs, n) {
 }
 
 function strokeSequence(p1, dirs) {
+  ctx.beginPath();
+  ctx.moveTo(p1[0], p1[1]);
+
   for (const dir of dirs) {
     const p2 = pointPlusDir(p1, dir);
-    line(p1, p2);
+    ctx.lineTo(p2[0], p2[1]);
     p1 = p2;
   }
+
+  ctx.stroke();
 }
 
 function rotate(dir) {
@@ -49,15 +54,5 @@ function pointPlusDir([x,y], dir) {
     return [x-LENGTH,y];
   }
 }
-
-function line(p1, p2, color = '#000') {
-  ctx.strokeStyle = color;
-  ctx.beginPath();
-  ctx.moveTo(p1[0], p1[1]);
-  ctx.lineTo(p2[0], p2[1]);
-  ctx.closePath();
-  ctx.stroke();
-}
-
 
 document.addEventListener('readystatechange', onPageReady);
