@@ -7,7 +7,7 @@ const LEFT = 3;
 function onPageReady() {
   const c = document.getElementById('canvas');
   const ctx = c.getContext('2d');
-  const seq = sequence([LEFT], 5);
+  const seq = sequence([LEFT], 12);
   const [len, startPos] = scale(size(seq), [1024, 1024]);
 
   strokeSequence(ctx, startPos, len, seq);
@@ -50,7 +50,10 @@ function scale([[xMin, yMin], [xMax, yMax]], [width, height]) {
   const minScale = scaleX < scaleY ? scaleX : scaleY;
 
   // How its starting point should be positioned
-  const startPos = [abs(xMin)*minScale, abs(yMin)*minScale];
+  const startPos = [
+    abs(xMin)*minScale + (width - gWidth*minScale)/2,
+    abs(yMin)*minScale + (height - gHeight*minScale)/2,
+  ];
 
   return [minScale, startPos];
 }
